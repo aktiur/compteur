@@ -16,11 +16,11 @@ async function routes (fastify, options) {
     url: '/incr',
     response: {
       200: { type: 'object', properties: { message: { type: 'string' } } },
-      401: { type: 'object', properties: { message: { type: 'string' } } }
+      403: { type: 'object', properties: { message: { type: 'string' } } }
     },
     handler: async (request, reply) => {
       if (request.cookies.compteur) {
-        reply.code(401)
+        reply.code(403)
         return { message: 'KO' }
       }
       // log infos to file
