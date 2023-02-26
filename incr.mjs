@@ -43,10 +43,11 @@ async function routes (fastify, options) {
       await Promise.all([streamPromise, redisPromise])
 
       reply.setCookie('compteur', 't', {
-        maxAge: 60 * 60 * 24 * 365,
+        maxAge: 60 * 60 * 24 * 365, // un an
         httpOnly: true,
-        sameSite: 'strict',
-        priority: 'high'
+        sameSite: 'none', // pour une utilisation cross-site
+        priority: 'high',
+        secure: true // nécessaire pour une utilisation cross-site
       })
 
       return { message: 'OK' }
