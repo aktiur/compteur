@@ -10,6 +10,7 @@ async function routes (fastify, options) {
     },
     handler: async (request, reply) => {
       const value = await redis.get(redisKey)
+      reply.set('Cache-Control', 'public, max-age=2')
       return { value: +value }
     }
   })

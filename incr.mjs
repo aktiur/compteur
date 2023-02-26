@@ -20,6 +20,7 @@ async function routes (fastify, options) {
     },
     handler: async (request, reply) => {
       if (request.cookies.compteur) {
+        reply.code(401)
         return { message: 'KO' }
       }
       // log infos to file

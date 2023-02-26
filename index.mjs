@@ -9,6 +9,10 @@ import cors from '@fastify/cors'
 import incrRoute from './incr.mjs'
 import valRoute from './val.mjs'
 
+const PORT = +process.env.PORT || 3000
+const REDIS_KEY = process.env.REDIS_KEY || 'compteur'
+const RECORD_PATH = process.env.RECORD_PATH || '/tmp'
+
 const logConfig = {
   level: 'info'
 }
@@ -22,19 +26,18 @@ fastify.register(cors, {
 })
 
 const start = async () => {
-  const redisKey = process.env.REDIS_KEY || 'compteur'
   const redis = new Redis()
   fastify.register(incrRoute, {
     redis,
-    redisKey,
-    recordPath: process.env.RECORD_PATH || '/tmp/'
+    redisKey: REDIS_KEY,
+    recordPath: RECORD_PATH
   })
   fastify.register(valRoute, {
     redis,
-    redisKey
+    redisKey: REDIS_KEY
   })
   try {
-    await fastify.listen({ port: 3000 })
+    await fastify.listen({ port: PORT })
   } catch (err) {
     fastify.log.error(err)
     process.exit(1)
