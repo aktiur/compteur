@@ -27,7 +27,7 @@ const start = async () => {
   fastify.register(incrRoute, {
     redis,
     redisKey,
-    recordPath: process.env.LOG_PATH || '/tmp/'
+    recordPath: process.env.RECORD_PATH || '/tmp/'
   })
   fastify.register(valRoute, {
     redis,
