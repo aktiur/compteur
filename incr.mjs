@@ -10,6 +10,7 @@ async function routes (fastify, options) {
   const recordPath = options.recordPath
   const recordFile = path.join(recordPath, crypto.randomUUID())
   const recordStream = fs.createWriteStream(recordFile)
+  const cookieDomain = options.cookieDomain
 
   fastify.route({
     method: 'POST',
@@ -43,6 +44,7 @@ async function routes (fastify, options) {
       await Promise.all([streamPromise, redisPromise])
 
       reply.setCookie('compteur', 't', {
+        domain: cookieDomain,
         maxAge: 60 * 60 * 24 * 365, // un an
         httpOnly: true,
         sameSite: 'none', // pour une utilisation cross-site

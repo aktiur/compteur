@@ -12,6 +12,7 @@ import valRoute from './val.mjs'
 const PORT = +process.env.PORT || 3000
 const REDIS_KEY = process.env.REDIS_KEY || 'compteur'
 const RECORD_PATH = process.env.RECORD_PATH || '/tmp'
+const COOKIE_DOMAIN = process.env.COOKIE_DOMAIN
 
 const logConfig = {
   level: 'info'
@@ -30,7 +31,8 @@ const start = async () => {
   fastify.register(incrRoute, {
     redis,
     redisKey: REDIS_KEY,
-    recordPath: RECORD_PATH
+    recordPath: RECORD_PATH,
+    cookieDomain: COOKIE_DOMAIN
   })
   fastify.register(valRoute, {
     redis,
