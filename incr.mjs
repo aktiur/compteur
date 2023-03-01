@@ -8,6 +8,8 @@ const logRequest = (req) => {
   const {
     'user-agent': ua,
     'x-real-ip': ip,
+    'x-forwarded-for': _forward,
+    host: _host,
     origin: o,
     referer: r,
     ...hs
