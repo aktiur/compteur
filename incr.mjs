@@ -16,14 +16,14 @@ async function routes (fastify, options) {
     method: 'POST',
     url: '/incr',
     response: {
-      200: { type: 'object', properties: { message: { type: 'string' } } },
-      403: { type: 'object', properties: { message: { type: 'string' } } }
+      200: { type: 'object', properties: { message: { type: 'string' } } }
     },
     handler: async (request, reply) => {
       if (request.cookies.compteur) {
-        reply.code(403)
-        return { message: 'KO' }
+        const value = await redis.get(redisKey)
+        return { message: 'OK', value: parseInt(value, 10) }
       }
+
       // log infos to file
       const infos = JSON.stringify({
         id: request.id,
@@ -41,7 +41,7 @@ async function routes (fastify, options) {
       // increase redis counter
       const redisPromise = redis.incr(redisKey)
 
-      await Promise.all([streamPromise, redisPromise])
+      const [value] = await Promise.all([redisPromise, streamPromise])
 
       reply.setCookie('compteur', 't', {
         domain: cookieDomain,
@@ -52,7 +52,7 @@ async function routes (fastify, options) {
         secure: true // nécessaire pour une utilisation cross-site
       })
 
-      return { message: 'OK' }
+      return { message: 'OK', value: parseInt(value, 10) }
     }
   })
 }
