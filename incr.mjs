@@ -4,6 +4,25 @@ import crypto from 'crypto'
 import fs from 'fs'
 import path from 'path'
 
+const logRequest = (req) => {
+  const {
+    'user-agent': ua,
+    'x-real-ip': ip,
+    origin: o,
+    referer: r,
+    ...hs
+  } = req.headers
+  const infos = {
+    id: req.id,
+    ip,
+    ua,
+    o,
+    r,
+    hs
+  }
+  return JSON.stringify(infos)
+}
+
 async function routes (fastify, options) {
   const redis = options.redis
   const redisKey = options.redisKey || 'compteur'
@@ -25,11 +44,7 @@ async function routes (fastify, options) {
       }
 
       // log infos to file
-      const infos = JSON.stringify({
-        id: request.id,
-        ip: request.ip,
-        headers: request.headers
-      })
+      const infos = logRequest(request)
 
       let streamPromise
       if (recordStream.write(infos + '\n')) {
