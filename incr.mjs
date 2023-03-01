@@ -40,7 +40,7 @@ async function routes (fastify, options) {
       200: { type: 'object', properties: { message: { type: 'string' } } }
     },
     handler: async (request, reply) => {
-      if (request.cookies.compteur) {
+      if (/\bcompteur=/.test(request.headers.cookie)) {
         const value = await redis.get(redisKey)
         return { message: 'OK', value: parseInt(value, 10) }
       }
